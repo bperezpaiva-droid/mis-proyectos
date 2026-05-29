@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0d0d14" />
+  <title>Mis Proyectos</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d14;
+      --surface: #16161f;
+      --border: rgba(255,255,255,0.07);
+      --text: #e8e8f0;
+      --muted: #6b6b80;
+      --radius: 18px;
+      --accent: #5b8dee;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── LOGIN ── */
+    #login {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+      max-width: 340px;
+    }
+
+    #login .logo { font-size: 44px; line-height: 1; }
+
+    #login h1 {
+      font-size: 22px; font-weight: 700; letter-spacing: -0.3px;
+      background: linear-gradient(135deg, #fff 30%, #7b7b99);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+
+    #login p { font-size: 13px; color: var(--muted); text-align: center; }
+
+    #pwd-input {
+      width: 100%; padding: 14px 18px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      color: var(--text); font-size: 18px; letter-spacing: 4px; text-align: center;
+      outline: none; transition: border-color 0.2s; margin-top: 8px;
+    }
+    #pwd-input:focus { border-color: var(--accent); }
+    #pwd-input.error { border-color: #ef4444; animation: shake 0.3s ease; }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+
+    #login button {
+      width: 100%; padding: 14px;
+      background: var(--accent); color: #fff;
+      border: none; border-radius: 12px;
+      font-size: 15px; font-weight: 600; cursor: pointer;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+    #login button:hover { opacity: 0.88; transform: translateY(-1px); }
+    #login button:active { transform: translateY(0); }
+
+    #error-msg { font-size: 13px; color: #ef4444; min-height: 18px; text-align: center; }
+
+    /* ── APP ── */
+    #app { display: none; flex-direction: column; align-items: center; width: 100%; padding: 48px 0 64px; }
+    #app.visible { display: flex; }
+
+    header { text-align: center; margin-bottom: 52px; }
+    header h1 {
+      font-size: 28px; font-weight: 700; letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #fff 30%, #7b7b99);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    header p { margin-top: 8px; font-size: 14px; color: var(--muted); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px; width: 100%; max-width: 700px;
+    }
+
+    .card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 28px 26px; cursor: pointer; text-decoration: none; color: inherit;
+      display: flex; align-items: flex-start; gap: 18px;
+      position: relative; overflow: hidden;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+    .card::before {
+      content: ''; position: absolute; inset: 0; opacity: 0;
+      transition: opacity 0.22s ease; border-radius: var(--radius);
+    }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,0.45); }
+    .card:hover::before { opacity: 1; }
+    .card:active { transform: translateY(-1px); }
+
+    .card-1 { --ca: #5b8dee; --cb: #7c3aed; }
+    .card-2 { --ca: #f59e0b; --cb: #ef4444; }
+    .card-3 { --ca: #25d366; --cb: #128c7e; }
+    .card-4 { --ca: #ec4899; --cb: #8b5cf6; }
+    .card-5 { --ca: #06b6d4; --cb: #3b82f6; }
+
+    .card:hover { border-color: var(--ca); }
+    .card::before { background: radial-gradient(circle at top left, color-mix(in srgb, var(--ca) 8%, transparent), transparent 70%); }
+
+    .icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; flex-shrink: 0;
+      background: linear-gradient(135deg, color-mix(in srgb, var(--ca) 20%, #1e1e2a), color-mix(in srgb, var(--cb) 15%, #1e1e2a));
+      border: 1px solid color-mix(in srgb, var(--ca) 25%, transparent);
+    }
+
+    .info { flex: 1; min-width: 0; }
+    .info h2 { font-size: 16px; font-weight: 600; letter-spacing: -0.2px; line-height: 1.3; margin-bottom: 5px; }
+    .info p  { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+    .badge {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
+      padding: 2px 7px; border-radius: 20px; display: inline-block; margin-top: 7px;
+      background: color-mix(in srgb, var(--ca) 15%, transparent);
+      color: var(--ca); border: 1px solid color-mix(in srgb, var(--ca) 25%, transparent);
+    }
+
+    .arrow {
+      position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
+      font-size: 16px; color: var(--muted); opacity: 0;
+      transition: opacity 0.18s ease, transform 0.18s ease, color 0.18s ease;
+    }
+    .card:hover .arrow { opacity: 1; color: var(--ca); transform: translateY(-50%) translateX(2px); }
+
+    footer { margin-top: 56px; font-size: 12px; color: #3a3a4f; text-align: center; }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div id="login">
+    <div class="logo">🗂️</div>
+    <h1>Mis Proyectos</h1>
+    <p>Introduce la contraseña para continuar</p>
+    <input id="pwd-input" type="password" placeholder="••••••••" maxlength="20" autocomplete="off" />
+    <div id="error-msg"></div>
+    <button onclick="checkPwd()">Entrar</button>
+  </div>
+
+  <!-- APP -->
+  <div id="app">
+    <header>
+      <h1>Mis Proyectos</h1>
+      <p>Haz clic en cualquier tarjeta para abrir el proyecto</p>
+    </header>
+
+    <div class="grid">
+
+      <a class="card card-1" href="https://previnco.previnco.workers.dev/" target="_blank" rel="noopener">
+        <div class="icon">🛡️</div>
+        <div class="info">
+          <h2>Previnco</h2>
+          <p>Panel de Control · Portal Moodle</p>
+          <span class="badge">Online</span>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="card card-2" href="https://bperezpaiva-droid.github.io/movitax-crm/" target="_blank" rel="noopener">
+        <div class="icon">🚖</div>
+        <div class="info">
+          <h2>Movitax</h2>
+          <p>Gestión de Servicios · CRM Taxis</p>
+          <span class="badge">Online</span>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="card card-3" href="./bot was-peluquerias/index.html" target="_blank" rel="noopener">
+        <div class="icon">💬</div>
+        <div class="info">
+          <h2>Demo Bot WAS</h2>
+          <p>Recordatorios WhatsApp · Peluquería</p>
+          <span class="badge">Local</span>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="card card-4" href="https://c1rdg4hxnn01-d.space-z.ai/#precios" target="_blank" rel="noopener">
+        <div class="icon">🚀</div>
+        <div class="info">
+          <h2>Mi Landing Page</h2>
+          <p>Agencia · Precios y servicios</p>
+          <span class="badge">Online</span>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="card card-5" href="./Landing + chat bot ASTURNORTE/index.html" target="_blank" rel="noopener">
+        <div class="icon">💻</div>
+        <div class="info">
+          <h2>Asturnorte</h2>
+          <p>Tienda Informática Oviedo · Chatbot</p>
+          <span class="badge">Local</span>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+    </div>
+
+    <footer>Brando · Agencia IA Asturias</footer>
+  </div>
+
+  <script>
+    async function sha256(msg) {
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+    }
+
+    const HASH = 'a764ff257b4351f823ea83fa9f1182b97f29a72613c6ad858961444c3a2752db';
+
+    async function checkPwd() {
+      const val = document.getElementById('pwd-input').value;
+      const h = await sha256(val);
+      if (h === HASH) {
+        sessionStorage.setItem('auth', '1');
+        document.getElementById('login').style.display = 'none';
+        document.getElementById('app').classList.add('visible');
+        document.body.style.justifyContent = 'flex-start';
+      } else {
+        const input = document.getElementById('pwd-input');
+        document.getElementById('error-msg').textContent = 'Contraseña incorrecta';
+        input.classList.add('error');
+        input.value = '';
+        setTimeout(() => input.classList.remove('error'), 400);
+      }
+    }
+
+    document.getElementById('pwd-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') checkPwd();
+    });
+
+    if (sessionStorage.getItem('auth') === '1') {
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('app').classList.add('visible');
+      document.body.style.justifyContent = 'flex-start';
+    }
+
+    // PWA manifest
+    const manifest = {
+      name: "Mis Proyectos", short_name: "Proyectos",
+      start_url: "./mis-proyectos.html", display: "standalone",
+      background_color: "#0d0d14", theme_color: "#0d0d14",
+      icons: [{ src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230d0d14'/><text y='.9em' font-size='72' x='50%' text-anchor='middle' dominant-baseline='hanging'>🗂️</text></svg>`), sizes: "any", type: "image/svg+xml" }]
+    };
+    try {
+      const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+      const link = document.createElement('link');
+      link.rel = 'manifest'; link.href = URL.createObjectURL(blob);
+      document.head.appendChild(link);
+    } catch(e) {}
+
+    if ('serviceWorker' in navigator) {
+      const sw = `self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>clients.claim());self.addEventListener('fetch',e=>e.respondWith(fetch(e.request).catch(()=>new Response('Offline'))));`;
+      try { navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{}); } catch(e) {}
+    }
+  </script>
+
+</body>
+</html>
