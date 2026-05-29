@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0d0d14" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Mis Proyectos" />
+  <link rel="manifest" href="manifest.json" />
   <title>Mis Proyectos</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -33,22 +36,15 @@
 
     /* ── LOGIN ── */
     #login {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-      width: 100%;
-      max-width: 340px;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 20px; width: 100%; max-width: 340px;
     }
-
     #login .logo { font-size: 44px; line-height: 1; }
-
     #login h1 {
       font-size: 22px; font-weight: 700; letter-spacing: -0.3px;
       background: linear-gradient(135deg, #fff 30%, #7b7b99);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
-
     #login p { font-size: 13px; color: var(--muted); text-align: center; }
 
     #pwd-input {
@@ -75,7 +71,6 @@
     }
     #login button:hover { opacity: 0.88; transform: translateY(-1px); }
     #login button:active { transform: translateY(0); }
-
     #error-msg { font-size: 13px; color: #ef4444; min-height: 18px; text-align: center; }
 
     /* ── APP ── */
@@ -190,12 +185,12 @@
         <span class="arrow">→</span>
       </a>
 
-      <a class="card card-3" href="./bot was-peluquerias/index.html" target="_blank" rel="noopener">
+      <a class="card card-3" href="https://bperezpaiva-droid.github.io/bot-was-peluquerias/" target="_blank" rel="noopener">
         <div class="icon">💬</div>
         <div class="info">
           <h2>Demo Bot WAS</h2>
           <p>Recordatorios WhatsApp · Peluquería</p>
-          <span class="badge">Local</span>
+          <span class="badge">Online</span>
         </div>
         <span class="arrow">→</span>
       </a>
@@ -210,12 +205,12 @@
         <span class="arrow">→</span>
       </a>
 
-      <a class="card card-5" href="./Landing + chat bot ASTURNORTE/index.html" target="_blank" rel="noopener">
+      <a class="card card-5" href="https://bperezpaiva-droid.github.io/asturnorte/" target="_blank" rel="noopener">
         <div class="icon">💻</div>
         <div class="info">
           <h2>Asturnorte</h2>
           <p>Tienda Informática Oviedo · Chatbot</p>
-          <span class="badge">Local</span>
+          <span class="badge">Online</span>
         </div>
         <span class="arrow">→</span>
       </a>
@@ -226,6 +221,10 @@
   </div>
 
   <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+
     async function sha256(msg) {
       const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
       return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
@@ -258,25 +257,6 @@
       document.getElementById('login').style.display = 'none';
       document.getElementById('app').classList.add('visible');
       document.body.style.justifyContent = 'flex-start';
-    }
-
-    // PWA manifest
-    const manifest = {
-      name: "Mis Proyectos", short_name: "Proyectos",
-      start_url: "./mis-proyectos.html", display: "standalone",
-      background_color: "#0d0d14", theme_color: "#0d0d14",
-      icons: [{ src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230d0d14'/><text y='.9em' font-size='72' x='50%' text-anchor='middle' dominant-baseline='hanging'>🗂️</text></svg>`), sizes: "any", type: "image/svg+xml" }]
-    };
-    try {
-      const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
-      const link = document.createElement('link');
-      link.rel = 'manifest'; link.href = URL.createObjectURL(blob);
-      document.head.appendChild(link);
-    } catch(e) {}
-
-    if ('serviceWorker' in navigator) {
-      const sw = `self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>clients.claim());self.addEventListener('fetch',e=>e.respondWith(fetch(e.request).catch(()=>new Response('Offline'))));`;
-      try { navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(()=>{}); } catch(e) {}
     }
   </script>
 
