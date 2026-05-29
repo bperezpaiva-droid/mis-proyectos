@@ -10,31 +10,17 @@
   <title>Mis Proyectos</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg: #0d0d14;
-      --surface: #16161f;
-      --border: rgba(255,255,255,0.07);
-      --text: #e8e8f0;
-      --muted: #6b6b80;
-      --radius: 18px;
-      --accent: #5b8dee;
+      --bg: #0d0d14; --surface: #16161f; --border: rgba(255,255,255,0.07);
+      --text: #e8e8f0; --muted: #6b6b80; --radius: 18px; --accent: #5b8dee;
     }
-
     body {
-      background: var(--bg);
-      color: var(--text);
+      background: var(--bg); color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 24px;
       -webkit-font-smoothing: antialiased;
     }
-
-    /* ── LOGIN ── */
     #login {
       display: flex; flex-direction: column; align-items: center;
       gap: 20px; width: 100%; max-width: 340px;
@@ -46,7 +32,6 @@
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
     #login p { font-size: 13px; color: var(--muted); text-align: center; }
-
     #pwd-input {
       width: 100%; padding: 14px 18px;
       background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
@@ -55,28 +40,21 @@
     }
     #pwd-input:focus { border-color: var(--accent); }
     #pwd-input.error { border-color: #ef4444; animation: shake 0.3s ease; }
-
     @keyframes shake {
       0%,100% { transform: translateX(0); }
       25% { transform: translateX(-6px); }
       75% { transform: translateX(6px); }
     }
-
     #login button {
-      width: 100%; padding: 14px;
-      background: var(--accent); color: #fff;
-      border: none; border-radius: 12px;
-      font-size: 15px; font-weight: 600; cursor: pointer;
-      transition: opacity 0.15s, transform 0.15s;
+      width: 100%; padding: 14px; background: var(--accent); color: #fff;
+      border: none; border-radius: 12px; font-size: 15px; font-weight: 600;
+      cursor: pointer; transition: opacity 0.15s, transform 0.15s;
     }
     #login button:hover { opacity: 0.88; transform: translateY(-1px); }
-    #login button:active { transform: translateY(0); }
     #error-msg { font-size: 13px; color: #ef4444; min-height: 18px; text-align: center; }
 
-    /* ── APP ── */
     #app { display: none; flex-direction: column; align-items: center; width: 100%; padding: 48px 0 64px; }
     #app.visible { display: flex; }
-
     header { text-align: center; margin-bottom: 52px; }
     header h1 {
       font-size: 28px; font-weight: 700; letter-spacing: -0.5px;
@@ -84,13 +62,10 @@
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
     header p { margin-top: 8px; font-size: 14px; color: var(--muted); }
-
     .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 20px; width: 100%; max-width: 700px;
     }
-
     .card {
       background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
       padding: 28px 26px; cursor: pointer; text-decoration: none; color: inherit;
@@ -105,16 +80,14 @@
     .card:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,0,0,0.45); }
     .card:hover::before { opacity: 1; }
     .card:active { transform: translateY(-1px); }
-
     .card-1 { --ca: #5b8dee; --cb: #7c3aed; }
     .card-2 { --ca: #f59e0b; --cb: #ef4444; }
     .card-3 { --ca: #25d366; --cb: #128c7e; }
     .card-4 { --ca: #ec4899; --cb: #8b5cf6; }
     .card-5 { --ca: #06b6d4; --cb: #3b82f6; }
-
+    .card-6 { --ca: #a78bfa; --cb: #ec4899; }
     .card:hover { border-color: var(--ca); }
     .card::before { background: radial-gradient(circle at top left, color-mix(in srgb, var(--ca) 8%, transparent), transparent 70%); }
-
     .icon {
       width: 48px; height: 48px; border-radius: 14px;
       display: flex; align-items: center; justify-content: center;
@@ -122,31 +95,26 @@
       background: linear-gradient(135deg, color-mix(in srgb, var(--ca) 20%, #1e1e2a), color-mix(in srgb, var(--cb) 15%, #1e1e2a));
       border: 1px solid color-mix(in srgb, var(--ca) 25%, transparent);
     }
-
     .info { flex: 1; min-width: 0; }
     .info h2 { font-size: 16px; font-weight: 600; letter-spacing: -0.2px; line-height: 1.3; margin-bottom: 5px; }
     .info p  { font-size: 13px; color: var(--muted); line-height: 1.5; }
-
     .badge {
       font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
       padding: 2px 7px; border-radius: 20px; display: inline-block; margin-top: 7px;
       background: color-mix(in srgb, var(--ca) 15%, transparent);
       color: var(--ca); border: 1px solid color-mix(in srgb, var(--ca) 25%, transparent);
     }
-
     .arrow {
       position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
       font-size: 16px; color: var(--muted); opacity: 0;
       transition: opacity 0.18s ease, transform 0.18s ease, color 0.18s ease;
     }
     .card:hover .arrow { opacity: 1; color: var(--ca); transform: translateY(-50%) translateX(2px); }
-
     footer { margin-top: 56px; font-size: 12px; color: #3a3a4f; text-align: center; }
   </style>
 </head>
 <body>
 
-  <!-- LOGIN -->
   <div id="login">
     <div class="logo">🗂️</div>
     <h1>Mis Proyectos</h1>
@@ -156,67 +124,50 @@
     <button onclick="checkPwd()">Entrar</button>
   </div>
 
-  <!-- APP -->
   <div id="app">
     <header>
       <h1>Mis Proyectos</h1>
       <p>Haz clic en cualquier tarjeta para abrir el proyecto</p>
     </header>
-
     <div class="grid">
 
       <a class="card card-1" href="https://previnco.previnco.workers.dev/" target="_blank" rel="noopener">
         <div class="icon">🛡️</div>
-        <div class="info">
-          <h2>Previnco</h2>
-          <p>Panel de Control · Portal Moodle</p>
-          <span class="badge">Online</span>
-        </div>
+        <div class="info"><h2>Previnco</h2><p>Panel de Control · Portal Moodle</p><span class="badge">Online</span></div>
         <span class="arrow">→</span>
       </a>
 
       <a class="card card-2" href="https://bperezpaiva-droid.github.io/movitax-crm/" target="_blank" rel="noopener">
         <div class="icon">🚖</div>
-        <div class="info">
-          <h2>Movitax</h2>
-          <p>Gestión de Servicios · CRM Taxis</p>
-          <span class="badge">Online</span>
-        </div>
+        <div class="info"><h2>Movitax</h2><p>Gestión de Servicios · CRM Taxis</p><span class="badge">Online</span></div>
         <span class="arrow">→</span>
       </a>
 
-      <a class="card card-3" href="https://bperezpaiva-droid.github.io/bot-was-peluquerias/" target="_blank" rel="noopener">
+      <a class="card card-3" href="./demo-was.html" target="_blank" rel="noopener">
         <div class="icon">💬</div>
-        <div class="info">
-          <h2>Demo Bot WAS</h2>
-          <p>Recordatorios WhatsApp · Peluquería</p>
-          <span class="badge">Online</span>
-        </div>
+        <div class="info"><h2>Demo Bot WAS</h2><p>Recordatorios WhatsApp · Peluquería</p><span class="badge">Online</span></div>
         <span class="arrow">→</span>
       </a>
 
       <a class="card card-4" href="https://c1rdg4hxnn01-d.space-z.ai/#precios" target="_blank" rel="noopener">
         <div class="icon">🚀</div>
-        <div class="info">
-          <h2>Mi Landing Page</h2>
-          <p>Agencia · Precios y servicios</p>
-          <span class="badge">Online</span>
-        </div>
+        <div class="info"><h2>Mi Landing Page</h2><p>Agencia · Precios y servicios</p><span class="badge">Online</span></div>
         <span class="arrow">→</span>
       </a>
 
-      <a class="card card-5" href="https://bperezpaiva-droid.github.io/asturnorte/" target="_blank" rel="noopener">
+      <a class="card card-5" href="./asturnorte.html" target="_blank" rel="noopener">
         <div class="icon">💻</div>
-        <div class="info">
-          <h2>Asturnorte</h2>
-          <p>Tienda Informática Oviedo · Chatbot</p>
-          <span class="badge">Online</span>
-        </div>
+        <div class="info"><h2>Asturnorte</h2><p>Tienda Informática Oviedo · Chatbot</p><span class="badge">Online</span></div>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="card card-6" href="./inmobiliaria.html" target="_blank" rel="noopener">
+        <div class="icon">🏠</div>
+        <div class="info"><h2>Landing Inmobiliaria</h2><p>Larrea Propiedades · Demo</p><span class="badge">Online</span></div>
         <span class="arrow">→</span>
       </a>
 
     </div>
-
     <footer>Brando · Agencia IA Asturias</footer>
   </div>
 
@@ -259,6 +210,5 @@
       document.body.style.justifyContent = 'flex-start';
     }
   </script>
-
 </body>
 </html>

@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recordatorios WhatsApp — Demo</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --wa-green: #25D366;
+      --wa-dark: #075E54;
+      --wa-light: #DCF8C6;
+      --wa-bg: #ECE5DD;
+      --wa-header: #128C7E;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-900: #111827;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--gray-50);
+      color: var(--gray-900);
+      min-height: 100vh;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, var(--wa-dark) 0%, var(--wa-header) 100%);
+      color: white;
+      text-align: center;
+      padding: 60px 20px 40px;
+    }
+    .hero h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .hero p {
+      font-size: 1.1rem;
+      opacity: .85;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+    .wa-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--wa-green);
+      color: white;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: .85rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    .section {
+      padding: 56px 0;
+    }
+    .section-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .section-sub {
+      text-align: center;
+      color: var(--gray-600);
+      margin-bottom: 40px;
+      font-size: 1rem;
+    }
+
+    /* ── DEMO PANEL ── */
+    .demo-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+    @media (max-width: 700px) { .demo-wrap { grid-template-columns: 1fr; } }
+
+    .config-card {
+      background: white;
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.08);
+    }
+    .config-card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--gray-600);
+      margin-bottom: 20px;
+    }
+    .field { margin-bottom: 14px; }
+    .field label {
+      display: block;
+      font-size: .78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--gray-600);
+      margin-bottom: 5px;
+    }
+    .field input, .field select {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: 8px;
+      font-size: .95rem;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .field input:focus, .field select:focus { border-color: var(--wa-green); }
+
+    .tipo-wrap { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .tipo-btn {
+      flex: 1;
+      min-width: 100px;
+      padding: 8px 10px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: 8px;
+      background: white;
+      font-size: .82rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all .2s;
+    }
+    .tipo-btn.active {
+      border-color: var(--wa-green);
+      background: #e8fdf2;
+      color: var(--wa-dark);
+    }
+
+    .play-btn {
+      width: 100%;
+      padding: 13px;
+      background: var(--wa-green);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .play-btn:hover { background: #1ebe5d; }
+
+    .precio-hint {
+      margin-top: 14px;
+      font-size: .8rem;
+      color: var(--gray-600);
+      text-align: center;
+    }
+
+    /* ── WHATSAPP CHAT ── */
+    .phone-wrap {
+      display: flex;
+      justify-content: center;
+    }
+    .phone {
+      width: 300px;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0,0,0,.18);
+      background: var(--wa-bg);
+    }
+    .phone-header {
+      background: var(--wa-header);
+      color: white;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .phone-back { font-size: 1.1rem; cursor: pointer; }
+    .phone-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--wa-green);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: .9rem;
+    }
+    .phone-info { flex: 1; }
+    .phone-name { font-weight: 700; font-size: .92rem; }
+    .phone-status { font-size: .72rem; opacity: .8; }
+    .phone-icons { display: flex; gap: 14px; font-size: 1rem; opacity: .9; }
+
+    .chat-body {
+      padding: 10px 10px 6px;
+      min-height: 340px;
+      max-height: 340px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .bubble {
+      max-width: 82%;
+      padding: 8px 10px 4px;
+      border-radius: 10px;
+      font-size: .83rem;
+      line-height: 1.4;
+      position: relative;
+      animation: popIn .25s ease;
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(.92) translateY(4px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .bubble.bot {
+      background: white;
+      align-self: flex-start;
+      border-top-left-radius: 2px;
+    }
+    .bubble.user {
+      background: var(--wa-light);
+      align-self: flex-end;
+      border-top-right-radius: 2px;
+    }
+    .bubble .meta {
+      font-size: .65rem;
+      color: #999;
+      text-align: right;
+      margin-top: 2px;
+    }
+    .bubble .meta .ticks { color: #53bdeb; }
+
+    .chat-input-bar {
+      background: var(--gray-100);
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .chat-input-fake {
+      flex: 1;
+      background: white;
+      border-radius: 20px;
+      padding: 7px 12px;
+      font-size: .82rem;
+      color: #aaa;
+    }
+    .chat-mic {
+      width: 32px; height: 32px;
+      background: var(--wa-green);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: .85rem;
+    }
+
+    /* ── CALCULADORA ── */
+    .calc-section { background: white; }
+    .calc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    @media (max-width: 600px) { .calc-grid { grid-template-columns: 1fr; } }
+
+    .calc-field { display: flex; flex-direction: column; gap: 6px; }
+    .calc-field label {
+      font-size: .8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--gray-600);
+    }
+    .calc-field input[type=range] {
+      accent-color: var(--wa-green);
+      width: 100%;
+    }
+    .calc-field .val {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--wa-dark);
+    }
+
+    .results-box {
+      background: linear-gradient(135deg, var(--wa-dark), var(--wa-header));
+      color: white;
+      border-radius: 16px;
+      padding: 28px;
+      max-width: 760px;
+      margin: 32px auto 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr) 1.2fr;
+      gap: 16px;
+      text-align: center;
+    }
+    @media (max-width: 600px) { .results-box { grid-template-columns: 1fr 1fr; } }
+
+    .res-item .label { font-size: .75rem; opacity: .8; margin-bottom: 4px; }
+    .res-item .amount { font-size: 1.5rem; font-weight: 800; }
+    .res-item.highlight {
+      background: var(--wa-green);
+      border-radius: 12px;
+      padding: 12px 8px;
+    }
+    .res-item.highlight .label { opacity: 1; font-weight: 700; }
+    .res-item.highlight .amount { font-size: 1.8rem; }
+
+    /* ── CÓMO FUNCIONA ── */
+    .steps { background: var(--gray-50); }
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .step-card {
+      background: white;
+      border-radius: 14px;
+      padding: 24px 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.06);
+      text-align: center;
+    }
+    .step-num {
+      width: 44px; height: 44px;
+      background: var(--wa-green);
+      color: white;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin: 0 auto 14px;
+    }
+    .step-card h4 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+    .step-card p { font-size: .88rem; color: var(--gray-600); line-height: 1.5; }
+
+    /* ── CTA ── */
+    .cta-section {
+      background: linear-gradient(135deg, var(--wa-dark), #0d3d35);
+      color: white;
+      text-align: center;
+      padding: 64px 20px;
+    }
+    .cta-section h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; margin-bottom: 12px; }
+    .cta-section p { opacity: .85; max-width: 540px; margin: 0 auto 32px; font-size: 1rem; line-height: 1.6; }
+    .cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-call {
+      padding: 14px 28px;
+      background: white;
+      color: var(--wa-dark);
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform .15s;
+    }
+    .btn-call:hover { transform: translateY(-2px); }
+    .btn-wa {
+      padding: 14px 28px;
+      background: var(--wa-green);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform .15s;
+    }
+    .btn-wa:hover { transform: translateY(-2px); }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="wa-badge">
+    <span>💬</span> Automatización WhatsApp Business
+  </div>
+  <h1>Recuerda a tus clientes.<br>Sin levantar el teléfono.</h1>
+  <p>Envía recordatorios automáticos antes de cada cita y reduce los no-shows hasta un 70%.</p>
+</div>
+
+<!-- DEMO INTERACTIVA -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">Prueba la demo</h2>
+    <p class="section-sub">Personalízala con el nombre de tu negocio y mira cómo llega al cliente</p>
+
+    <div class="demo-wrap">
+      <!-- CONFIG -->
+      <div class="config-card">
+        <h3>Configura la demo</h3>
+
+        <div class="field">
+          <label>Nombre del negocio</label>
+          <input type="text" id="negocio" value="Peluquería Lucía" oninput="actualizarChat()" />
+        </div>
+        <div class="field">
+          <label>Nombre del cliente</label>
+          <input type="text" id="cliente" value="Marta" oninput="actualizarChat()" />
+        </div>
+        <div class="field">
+          <label>Servicio reservado</label>
+          <input type="text" id="servicio" value="corte y color" oninput="actualizarChat()" />
+        </div>
+        <div class="field" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div>
+            <label>Día</label>
+            <input type="text" id="dia" value="mañana viernes" oninput="actualizarChat()" />
+          </div>
+          <div>
+            <label>Hora</label>
+            <input type="text" id="hora" value="17:00" oninput="actualizarChat()" />
+          </div>
+        </div>
+
+        <div style="margin-bottom:8px; font-size:.78rem; font-weight:600; text-transform:uppercase; letter-spacing:.05em; color:var(--gray-600);">Tipo de demo</div>
+        <div class="tipo-wrap" id="tipos">
+          <button class="tipo-btn active" onclick="setTipo('confirma', this)">✅ Cliente confirma</button>
+          <button class="tipo-btn" onclick="setTipo('cancela', this)">❌ Cliente cancela</button>
+          <button class="tipo-btn" onclick="setTipo('silencio', this)">🔔 No responde (2º aviso)</button>
+        </div>
+
+        <button class="play-btn" onclick="reproducirDemo()">▶ Reproducir demo</button>
+        <p class="precio-hint">Para el negocio: <strong>500€ setup + 60€/mes</strong>. Coste de WhatsApp lo paga aparte (~20-40€/mes).</p>
+      </div>
+
+      <!-- PHONE -->
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="phone-header">
+            <div class="phone-back">‹</div>
+            <div class="phone-avatar" id="avatar">PL</div>
+            <div class="phone-info">
+              <div class="phone-name" id="phone-name">Peluquería Lucía</div>
+              <div class="phone-status">en línea</div>
+            </div>
+            <div class="phone-icons"><span>📞</span><span>⋮</span></div>
+          </div>
+          <div class="chat-body" id="chat"></div>
+          <div class="chat-input-bar">
+            <div class="chat-input-fake">Escribe un mensaje...</div>
+            <div class="chat-mic">🎙</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULADORA -->
+<section class="section calc-section">
+  <div class="container">
+    <h2 class="section-title">¿Cuánto te ahorras al mes?</h2>
+    <p class="section-sub">Calcula con tus números reales lo que estás perdiendo hoy en no-shows.</p>
+
+    <div class="calc-grid">
+      <div class="calc-field">
+        <label>Citas al mes</label>
+        <input type="range" id="citas" min="10" max="400" value="80" oninput="calcular()" />
+        <div class="val" id="v-citas">80</div>
+      </div>
+      <div class="calc-field">
+        <label>% de no-shows</label>
+        <input type="range" id="noshow" min="5" max="50" value="25" oninput="calcular()" />
+        <div class="val" id="v-noshow">25%</div>
+      </div>
+      <div class="calc-field">
+        <label>Coste medio de cada cita perdida (€)</label>
+        <input type="range" id="coste" min="10" max="200" value="20" step="5" oninput="calcular()" />
+        <div class="val" id="v-coste">20 €</div>
+      </div>
+      <div class="calc-field">
+        <label>% de reducción con recordatorios (estándar: 60-70%)</label>
+        <input type="range" id="reduccion" min="30" max="80" value="65" oninput="calcular()" />
+        <div class="val" id="v-reduccion">65%</div>
+      </div>
+    </div>
+
+    <div class="results-box">
+      <div class="res-item">
+        <div class="label">Pérdida actual al mes</div>
+        <div class="amount" id="r-actual">400 €</div>
+      </div>
+      <div class="res-item">
+        <div class="label">Pérdida con recordatorios</div>
+        <div class="amount" id="r-con">140 €</div>
+      </div>
+      <div class="res-item">
+        <div class="label">Ahorro bruto / mes</div>
+        <div class="amount" id="r-ahorro">260 €</div>
+      </div>
+      <div class="res-item highlight">
+        <div class="label">Beneficio neto cada mes</div>
+        <div class="amount" id="r-neto">200 €</div>
+        <div style="font-size:.72rem; margin-top:4px; opacity:.85;">Coste del servicio: <span id="r-coste-srv">60 €</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CÓMO FUNCIONA -->
+<section class="section steps">
+  <div class="container">
+    <h2 class="section-title">Cómo funciona</h2>
+    <p class="section-sub"></p>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h4>Conexión a tu agenda</h4>
+        <p>Lo conecto con Google Calendar, tu software de reservas, o un sheet sencillo. Sin cambiar cómo trabajas hoy.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h4>Envío automático</h4>
+        <p>24h antes y 2h antes de cada cita, el sistema envía un WhatsApp al cliente con día, hora y servicio.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h4>El cliente responde</h4>
+        <p>Confirma con SÍ, cancela con CANCELAR. La respuesta vuelve al sistema y se actualiza solo.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <h4>Tú te enteras al instante</h4>
+        <p>Si cancela, te llega un aviso por WhatsApp para que liberes el hueco. Si no responde, segundo recordatorio.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2>¿Lo quieres para tu negocio?</h2>
+  <p>Te lo monto en 7 días sin que muevas un dedo. Sin permanencia, sin sorpresas. Si en el primer mes no recuperas más de lo que cuesta, te devuelvo el dinero.</p>
+  <div class="cta-btns">
+    <a href="tel:+34600000000" class="btn-call">📞 Llámame ahora</a>
+    <a href="https://wa.me/34600000000" target="_blank" class="btn-wa">💬 WhatsApp directo</a>
+  </div>
+</div>
+
+<script>
+  let tipoActivo = 'confirma';
+
+  function setTipo(tipo, btn) {
+    tipoActivo = tipo;
+    document.querySelectorAll('.tipo-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function actualizarChat() {
+    const n = document.getElementById('negocio').value || 'Tu negocio';
+    document.getElementById('phone-name').textContent = n;
+    const ini = n.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+    document.getElementById('avatar').textContent = ini;
+  }
+
+  function burbuja(texto, tipo, hora) {
+    return `<div class="bubble ${tipo}">
+      ${texto}
+      <div class="meta">${hora} ${tipo === 'bot' ? '<span class="ticks">✓✓</span>' : ''}</div>
+    </div>`;
+  }
+
+  function reproducirDemo() {
+    const negocio  = document.getElementById('negocio').value  || 'Tu negocio';
+    const cliente  = document.getElementById('cliente').value  || 'Cliente';
+    const servicio = document.getElementById('servicio').value || 'tu cita';
+    const dia      = document.getElementById('dia').value      || 'mañana';
+    const hora     = document.getElementById('hora').value     || '10:00';
+
+    const chat = document.getElementById('chat');
+    chat.innerHTML = '';
+
+    const msg1 = `Hola ${cliente} 👋\n\nTe recordamos tu cita en <b>${negocio}</b>:\n\n📅 ${dia}\n🕐 ${hora}\n✂️ ${servicio}\n\nPor favor confirma respondiendo:\n<b>SÍ</b> para confirmar\n<b>CANCELAR</b> para anular`;
+
+    const secuencias = {
+      confirma: [
+        { html: burbuja(msg1.replace(/\n/g,'<br>'), 'bot', '00:22'), delay: 400 },
+        { html: burbuja('SÍ', 'user', '00:22'), delay: 1800 },
+        { html: burbuja(`¡Perfecto ${cliente}! ✅<br>Tu cita queda confirmada para el ${dia} a las ${hora}.<br><br>Te esperamos 💚`, 'bot', '00:23'), delay: 3200 },
+      ],
+      cancela: [
+        { html: burbuja(msg1.replace(/\n/g,'<br>'), 'bot', '00:22'), delay: 400 },
+        { html: burbuja('CANCELAR', 'user', '00:22'), delay: 1800 },
+        { html: burbuja(`Entendido ${cliente}. Tu cita del ${dia} a las ${hora} ha sido cancelada.<br><br>Cuando quieras volver a reservar, escríbenos 😊`, 'bot', '00:23'), delay: 3200 },
+        { html: burbuja(`🔔 <b>${negocio}</b>: el hueco de las ${hora} del ${dia} ha quedado libre.`, 'bot', '00:23'), delay: 4800 },
+      ],
+      silencio: [
+        { html: burbuja(msg1.replace(/\n/g,'<br>'), 'bot', '00:22'), delay: 400 },
+        { html: burbuja(`⚠️ ${cliente}, tu cita en <b>${negocio}</b> es <b>hoy a las ${hora}</b>.<br><br>Si no puedes venir, avísanos respondiendo CANCELAR.<br>¡Te esperamos! 🙏`, 'bot', '02:00'), delay: 2200 },
+      ],
+    };
+
+    (secuencias[tipoActivo] || secuencias.confirma).forEach(({ html, delay }) => {
+      setTimeout(() => {
+        chat.insertAdjacentHTML('beforeend', html);
+        chat.scrollTop = chat.scrollHeight;
+      }, delay);
+    });
+  }
+
+  function calcular() {
+    const citas     = +document.getElementById('citas').value;
+    const noshow    = +document.getElementById('noshow').value / 100;
+    const coste     = +document.getElementById('coste').value;
+    const reduccion = +document.getElementById('reduccion').value / 100;
+    const srvCost   = 60;
+
+    document.getElementById('v-citas').textContent     = citas;
+    document.getElementById('v-noshow').textContent    = Math.round(noshow*100) + '%';
+    document.getElementById('v-coste').textContent     = coste + ' €';
+    document.getElementById('v-reduccion').textContent = Math.round(reduccion*100) + '%';
+
+    const perdida  = Math.round(citas * noshow * coste);
+    const conBot   = Math.round(perdida * (1 - reduccion));
+    const ahorro   = perdida - conBot;
+    const neto     = ahorro - srvCost;
+
+    document.getElementById('r-actual').textContent   = perdida + ' €';
+    document.getElementById('r-con').textContent      = conBot  + ' €';
+    document.getElementById('r-ahorro').textContent   = ahorro  + ' €';
+    document.getElementById('r-neto').textContent     = neto    + ' €';
+    document.getElementById('r-coste-srv').textContent = srvCost + ' €';
+  }
+
+  // Init
+  calcular();
+  setTimeout(reproducirDemo, 600);
+</script>
+</body>
+</html>
